@@ -1,0 +1,69 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-service-Deployment
+  label: api-gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway-service
+  template:
+    metadata:
+      labels: api-gateway-service
+    spec:
+      containers:
+        - name: api-gateway-service
+          image: iamsainadh/neovault-apigateway:v1
+          ports:
+            - containerPort: 8081
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: API_GATEWAY
+            - name: AUTH_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: AUTH_PORT
+            - name: SECRET_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: SECRET_PORT
+            - name: VAULT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: VAULT_PORT
+            - name: AUDIT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: AUDIT_PORT
+            - name: DB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: DB_URI
+            - name:
+              valueFrom:
+                secretKeyRef:
+                  name: neo_vault_secret
+                  key: JWT_SECRET
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-service
+spec:
+  selector:
+    app: api-gateway-service
+  type: LoadBalancer
+  ports:
+    - port: 8081
+      targetPort: 8081

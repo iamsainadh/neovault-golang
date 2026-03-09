@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: neo_vault_config
+  namespace: default
+data:
+  API_GATEWAY: "8081"
+  AUTH_PORT: "auth-service:50052"
+  SECRET_PORT: "secret-service:50053"
+  VAULT_PORT: "vault-service:50054"
+  AUDIT_PORT: "audit-service:50055"
+  DB_URI: "<DB_URI>"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: neo_vault_secret
+data:
+  JWT_SECRET: "<JWT_SECRET>"
+  RMK_KEY: "<RMK_KEY>"

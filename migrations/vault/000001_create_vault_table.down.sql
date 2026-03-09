@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS VAULT_KEYS;
+DROP TABLE IF EXISTS schema_migrations;
+DROP TYPE IF EXISTS vault_status;

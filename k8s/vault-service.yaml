@@ -1,0 +1,50 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-service-Deployment
+  label: vault-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-service
+  template:
+    metadata:
+      labels: vault-service
+    spec:
+      containers:
+        - name: vault-service
+          image: iamsainadh/neovault-vault:v1
+          ports:
+            - containerPort: 50054
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: VAULT_PORT
+            - name: DB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: DB_URI
+            - name:
+              valueFrom:
+                secretKeyRef:
+                  name: neo_vault_secret
+                  key: RMK_KEY
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-service
+spec:
+  selector:
+    app: vault-service
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 50054
+      targetPort: 50054

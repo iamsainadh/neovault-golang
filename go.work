@@ -1,0 +1,13 @@
+go 1.26.1
+
+use (
+	./services/api-gateway
+	./services/audit
+	./services/auth
+	./services/notification
+	./services/scheduler
+	./services/vault
+	./services/secret
+	./shared/
+	./utils/
+)

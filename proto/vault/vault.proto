@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package vault;
+
+option go_package = "github.com/iamsainadh/neovault/services/vault/proto";
+
+enum VaultKeyStatus {
+  VAULT_KEY_STATUS_ACTIVE      = 0;
+  VAULT_KEY_STATUS_ROTATED     = 1;
+  VAULT_KEY_STATUS_RETIRED     = 2;
+  VAULT_KEY_STATUS_COMPROMISED = 3;
+}
+
+service VaultService{
+  rpc CreateVault(CreateVaultRequest) returns (CreateVaultResponse);
+  rpc GetVaultByOrgId(GetVaultRequest) returns (GetVaultResponse);
+}
+
+message CreateVaultRequest {
+  string org_id        = 1;
+  bytes  encrypted_key = 3;
+  string algorithm     = 4;
+}
+
+message CreateVaultResponse {
+  string id            = 1;
+  string org_id        = 2;
+  int32  key_version   = 3;
+  bytes  encrypted_key = 5;
+}
+
+message GetVaultRequest {
+  string org_id = 1;
+}
+
+message GetVaultResponse{
+  string id            = 1;
+  bytes  encrypted_key = 2;
+  int32  version       = 3;
+}

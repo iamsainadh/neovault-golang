@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/iamsainadh/neovault/services/vault/proto/";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUserLogin(GetUserRequest) returns (GetUserResponse);
+  rpc CreateOrganization(CreateOrganizationRequest) returns (CreateOrganizationResponse);
+  rpc CreateOrganizationMember(CreateOrganizationMemberRequest) returns (CreateOrganizationMemberResponse);
+}
+
+// -- User
+message CreateUserRequest {
+  string name     = 1;
+  string email    = 2;
+  string password = 3;
+}
+
+message CreateUserResponse {
+  string user_id = 1;
+  string token   = 2;
+}
+
+//--- Get User
+message GetUserRequest{
+  string email    = 1;
+  string password = 2;
+}
+
+message GetUserResponse{
+  string user_id = 1;
+  string token   = 2;
+}
+
+//-- Organization
+
+message CreateOrganizationRequest {
+  string name    = 1;
+  string user_id = 2;
+}
+
+message CreateOrganizationResponse{
+  string id   = 1;
+  string name = 2;
+}
+
+//-- Organization-members
+
+message CreateOrganizationMemberRequest {
+  string user_id = 1;
+  string org_id  = 2;
+}
+
+message CreateOrganizationMemberResponse{
+  User         user         = 1;
+  Organization organization = 2;
+}
+
+message User{
+  string id        = 1;
+  string name      = 2;
+  string email     = 3;
+  bool   is_active = 4;
+}
+
+message Organization{
+  string id     = 1;
+  string name   = 2;
+  string status = 3;
+}

@@ -1,0 +1,44 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler-service-Deployment
+  label: scheduler-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler-service
+  template:
+    metadata:
+      labels: scheduler-service
+    spec:
+      containers:
+        - name: scheduler-service
+          image: iamsainadh/neovault-scheduler:v1
+          env:
+            - name: SECRET_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: SECRET_PORT
+            - name: VAULT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: VAULT_PORT
+            - name: AUDIT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: AUDIT_PORT
+            - name: DB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: DB_URI
+            - name: RMK_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: neo_vault_secret
+                  key: RMK_KEY

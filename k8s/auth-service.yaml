@@ -1,0 +1,59 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-Deployment
+  labels:
+    app: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: iamsainadh/neovault-auth:v1
+          ports:
+            - containerPort: 50052
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: AUTH_PORT
+
+            - name: VAULT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: VAULT_PORT
+
+            - name: DB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: neo_vault_config
+                  key: DB_URI
+            - name:
+              valueFrom:
+                secretKeyRef:
+                  name: neo_vault_secret
+                  key: JWT_SECRET
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth-service
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 50052
+      targetPort: 50052
